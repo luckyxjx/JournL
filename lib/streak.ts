@@ -24,6 +24,30 @@ export class StreakService {
     return streak;
   }
 
+  async calculateLongestStreak(userId: string): Promise<number> {
+    const entries = await this.entryRepo.list();
+    if (!entries.length) return 0;
+
+    const dates = [...new Set(entries.map(e => e.createdAt.toISOString().split('T')[0]))].sort();
+    let longestStreak = 0;
+    let currentStreak = 1;
+
+    for (let i = 1; i < dates.length; i++) {
+      const prevDate = new Date(dates[i - 1]);
+      const currDate = new Date(dates[i]);
+      const diffTime = currDate.getTime() - prevDate.getTime();
+      const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+      if (diffDays === 1) {
+        currentStreak++;
+      } else {
+        longestStreak = Math.max(longestStreak, currentStreak);
+        currentStreak = 1;
+      }
+    }
+    return Math.max(longestStreak, currentStreak);
+  }
+
   async updateStreak(userId: string): Promise<number> {
     const streak = await this.calculateCurrentStreak(userId);
     localStorage.setItem(`streak_${userId}`, streak.toString());

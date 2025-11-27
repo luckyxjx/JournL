@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/lib/auth'
-
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function LoginPage() {
   const { user, signInWithGoogle, signInWithApple, signInWithMagicLink, signInAsGuest, isGuest, loading: authLoading } = useAuth()
@@ -12,8 +11,15 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   useEffect(() => {
+    // Check for error in URL params
+    const urlError = searchParams.get('error')
+    if (urlError) {
+      setError(decodeURIComponent(urlError))
+    }
+
     // Add delay to prevent navigation race conditions
     const timer = setTimeout(() => {
       if (!authLoading && (user || isGuest)) {
@@ -22,7 +28,7 @@ export default function LoginPage() {
     }, 100)
 
     return () => clearTimeout(timer)
-  }, [user, isGuest, authLoading, router])
+  }, [user, isGuest, authLoading, router, searchParams])
 
   if (authLoading || (!authLoading && (user || isGuest))) {
     return (

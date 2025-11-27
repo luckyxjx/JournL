@@ -10,6 +10,7 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.86.0",
     "@tiptap/extension-highlight": "^3.11.0",
     "@tiptap/extension-task-item": "^3.11.0",

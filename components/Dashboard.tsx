@@ -11,7 +11,7 @@ import FloatingActionButton from './FloatingActionButton';
 import { useAuth } from '@/lib/auth';
 import { StreakService } from '@/lib/streak';
 import { AchievementSystem } from '@/lib/achievements';
-import { SettingsIcon, AnalyticsIcon } from '@/components/icons/SettingsIcons';
+import { SettingsIcon, AnalyticsIcon, UserIcon } from '@/components/icons/SettingsIcons';
 
 interface EntryPreview {
   id: string;
@@ -150,6 +150,13 @@ export default function Dashboard() {
     }
   };
 
+  const getGreeting = (): string => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good Morning';
+    if (hour < 17) return 'Good Afternoon';
+    return 'Good Evening';
+  };
+
   const formatDate = (date: Date): string => {
     const now = new Date();
     const entryDate = new Date(date);
@@ -187,10 +194,13 @@ export default function Dashboard() {
           className="flex flex-col md:flex-row justify-between items-start mb-6 md:mb-12 gap-4"
         >
           <div>
-            <h1 className="text-2xl md:text-4xl font-serif font-bold text-peaceful-text mb-2">Good Evening</h1>
+            <h1 className="text-2xl md:text-4xl font-serif font-bold text-peaceful-text mb-2">{getGreeting()}</h1>
             <p className="text-peaceful-text/70 text-base md:text-lg font-sans">Your private space for reflection</p>
           </div>
           <div className="flex flex-wrap items-center gap-2 md:gap-4">
+            <Link href="/profile" className="text-peaceful-text hover:text-peaceful-accent p-2 rounded-lg hover:bg-white/20 transition-colors">
+              <UserIcon className="w-6 h-6" />
+            </Link>
             <Link href="/analytics" className="text-peaceful-text hover:text-peaceful-accent p-2 rounded-lg hover:bg-white/20 transition-colors">
               <AnalyticsIcon className="w-6 h-6" />
             </Link>
