@@ -10,7 +10,10 @@ export default function FloatingActionButton() {
       <motion.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        className="fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-r from-peaceful-accent to-peaceful-button text-white rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center z-50 border border-white/20"
+        className="fixed bottom-8 right-8 w-16 h-16 text-white rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center z-50 border border-white/20"
+        style={{
+          background: 'linear-gradient(135deg, var(--peaceful-accent), var(--peaceful-button))'
+        }}
       >
         <WriteIcon className="w-6 h-6" />
       </motion.button>
