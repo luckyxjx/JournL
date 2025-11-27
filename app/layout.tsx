@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import AppInitializer from '@/components/AppInitializer'
+import ErrorBoundary from '@/components/ErrorBoundary'
+import OfflineIndicator from '@/components/OfflineIndicator'
+import ThemeProvider from '@/components/ThemeProvider'
 import { AuthProvider } from '@/lib/auth'
 import { Merriweather, Inter } from 'next/font/google'
 import { PWAService } from '@/lib/pwa'
@@ -30,12 +33,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${merriweather.variable} ${inter.variable}`}>
-        <AuthProvider>
-          <AppInitializer>
-            <PWAInitializer />
-            {children}
-          </AppInitializer>
-        </AuthProvider>
+        <ErrorBoundary>
+          <AuthProvider>
+            <ThemeProvider>
+              <AppInitializer>
+                <PWAInitializer />
+                <OfflineIndicator />
+                {children}
+              </AppInitializer>
+            </ThemeProvider>
+          </AuthProvider>
+        </ErrorBoundary>
       </body>
     </html>
   )

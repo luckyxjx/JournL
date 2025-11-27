@@ -3,16 +3,26 @@
 @tailwind utilities;
 
 :root {
-  --peaceful-bg: #D4E6D4;
-  --peaceful-card: #E8F5E8;
-  --peaceful-warm: #F0F9F4;
-  --peaceful-button: #9ED5C5;
-  --peaceful-accent: #8EC3B0;
-  --peaceful-text: #628E75;
-  --peaceful-text-secondary: #8EC3B0;
-  --peaceful-border: rgba(142, 195, 176, 0.3);
-  --peaceful-hover: rgba(255, 255, 255, 0.7);
-  --peaceful-shadow: rgba(31, 38, 135, 0.37);
+  /* Default theme variables - will be overridden by theme system */
+  --theme-primary: #10B981;
+  --theme-secondary: #059669;
+  --theme-accent: #34D399;
+  --theme-background: #F0FDF4;
+  --theme-surface: #DCFCE7;
+  --theme-text: #064E3B;
+  --theme-text-secondary: #065F46;
+  
+  /* Legacy peaceful theme variables for backward compatibility */
+  --peaceful-bg: var(--theme-background);
+  --peaceful-card: var(--theme-surface);
+  --peaceful-warm: var(--theme-surface);
+  --peaceful-button: var(--theme-secondary);
+  --peaceful-accent: var(--theme-primary);
+  --peaceful-text: var(--theme-text);
+  --peaceful-text-secondary: var(--theme-text-secondary);
+  --peaceful-border: color-mix(in srgb, var(--theme-primary) 30%, transparent);
+  --peaceful-hover: color-mix(in srgb, var(--theme-surface) 70%, white);
+  --peaceful-shadow: color-mix(in srgb, var(--theme-primary) 20%, transparent);
 }
 
 /* Dark Theme */

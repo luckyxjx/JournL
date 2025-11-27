@@ -168,91 +168,100 @@ export default function ProfilePage() {
             </div>
           </motion.div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="bg-peaceful-warm backdrop-blur-md border border-peaceful rounded-2xl p-4 shadow-glass"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <BookOpenIcon className="w-5 h-5 text-peaceful-accent" />
-                <span className="text-sm text-peaceful-secondary">Total Entries</span>
-              </div>
-              <p className="text-2xl font-bold text-peaceful-text">{stats?.totalEntries || 0}</p>
-            </motion.div>
+          {/* Stats Grid - Reorganized for better hierarchy */}
+          <div className="space-y-4">
+            {/* Row 1: Consistency Metrics */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="bg-peaceful-warm backdrop-blur-md border border-peaceful rounded-2xl p-4 shadow-glass"
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <TrendingUpIcon className="w-5 h-5 text-peaceful-accent" />
+                  <span className="text-sm text-peaceful-secondary">Current Streak</span>
+                </div>
+                <p className="text-2xl font-bold text-peaceful-text">{stats?.currentStreak || 0} {(stats?.currentStreak || 0) === 1 ? 'day' : 'days'}</p>
+              </motion.div>
 
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-peaceful-warm backdrop-blur-md border border-peaceful rounded-2xl p-4 shadow-glass"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <TrendingUpIcon className="w-5 h-5 text-peaceful-accent" />
-                <span className="text-sm text-peaceful-secondary">Current Streak</span>
-              </div>
-              <p className="text-2xl font-bold text-peaceful-text">{stats?.currentStreak || 0} days</p>
-            </motion.div>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-peaceful-warm backdrop-blur-md border border-peaceful rounded-2xl p-4 shadow-glass"
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <TrendingUpIcon className="w-5 h-5 text-peaceful-accent" />
+                  <span className="text-sm text-peaceful-secondary">Longest Streak</span>
+                </div>
+                <p className="text-2xl font-bold text-peaceful-text">{stats?.longestStreak || 0} {(stats?.longestStreak || 0) === 1 ? 'day' : 'days'}</p>
+              </motion.div>
 
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-peaceful-warm backdrop-blur-md border border-peaceful rounded-2xl p-4 shadow-glass"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-peaceful-secondary text-sm">Total Words</span>
-              </div>
-              <p className="text-2xl font-bold text-peaceful-text">{stats?.totalWords?.toLocaleString() || 0}</p>
-            </motion.div>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="bg-peaceful-warm backdrop-blur-md border border-peaceful rounded-2xl p-4 shadow-glass"
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <BookOpenIcon className="w-5 h-5 text-peaceful-accent" />
+                  <span className="text-sm text-peaceful-secondary">Total Entries</span>
+                </div>
+                <p className="text-2xl font-bold text-peaceful-text">{stats?.totalEntries || 0}</p>
+              </motion.div>
+            </div>
 
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="bg-peaceful-warm backdrop-blur-md border border-peaceful rounded-2xl p-4 shadow-glass"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                {stats?.mostCommonMood && getMoodIcon(stats.mostCommonMood)}
-                <span className="text-sm text-peaceful-secondary">Most Common Mood</span>
-              </div>
-              <p className="text-lg font-semibold text-peaceful-text capitalize">
-                {stats?.mostCommonMood || 'None yet'}
-              </p>
-            </motion.div>
+            {/* Row 2: Content Metrics */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="bg-peaceful-warm backdrop-blur-md border border-peaceful rounded-2xl p-4 shadow-glass"
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-peaceful-secondary text-sm">Total Words</span>
+                </div>
+                <p className="text-2xl font-bold text-peaceful-text">{stats?.totalWords?.toLocaleString() || 0}</p>
+              </motion.div>
+
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="bg-peaceful-warm backdrop-blur-md border border-peaceful rounded-2xl p-4 shadow-glass"
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-peaceful-secondary text-sm">Avg Words/Entry</span>
+                </div>
+                <p className="text-2xl font-bold text-peaceful-text">{stats?.averageWordsPerEntry || 0}</p>
+              </motion.div>
+
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="bg-peaceful-warm backdrop-blur-md border border-peaceful rounded-2xl p-4 shadow-glass"
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  {stats?.mostCommonMood && getMoodIcon(stats.mostCommonMood)}
+                  <span className="text-sm text-peaceful-secondary">Common Mood</span>
+                </div>
+                <p className="text-lg font-semibold text-peaceful-text capitalize">
+                  {stats?.mostCommonMood || 'None yet'}
+                </p>
+              </motion.div>
+            </div>
           </div>
 
-          {/* Additional Stats */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="bg-peaceful-warm backdrop-blur-md border border-peaceful rounded-3xl p-6 shadow-glass"
-          >
-            <h3 className="text-xl font-serif font-semibold text-peaceful-text mb-4">Writing Statistics</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="text-center p-4 bg-white/20 rounded-xl">
-                <p className="text-2xl font-bold text-peaceful-text">{stats?.entriesThisMonth || 0}</p>
-                <p className="text-sm text-peaceful-secondary">Entries This Month</p>
-              </div>
-              <div className="text-center p-4 bg-white/20 rounded-xl">
-                <p className="text-2xl font-bold text-peaceful-text">{stats?.longestStreak || 0}</p>
-                <p className="text-sm text-peaceful-secondary">Longest Streak</p>
-              </div>
-              <div className="text-center p-4 bg-white/20 rounded-xl">
-                <p className="text-2xl font-bold text-peaceful-text">{stats?.averageWordsPerEntry || 0}</p>
-                <p className="text-sm text-peaceful-secondary">Avg Words/Entry</p>
-              </div>
-            </div>
-          </motion.div>
+
 
           {/* Current Settings */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.7 }}
             className="bg-peaceful-warm backdrop-blur-md border border-peaceful rounded-3xl p-6 shadow-glass"
           >
             <div className="flex items-center justify-between mb-4">
@@ -296,7 +305,7 @@ export default function ProfilePage() {
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
+              transition={{ delay: 0.8 }}
               className="bg-peaceful-warm backdrop-blur-md border border-peaceful rounded-3xl p-6 shadow-glass"
             >
               <h3 className="text-xl font-serif font-semibold text-peaceful-text mb-4">Recent Activity</h3>

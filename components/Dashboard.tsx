@@ -210,7 +210,7 @@ export default function Dashboard() {
             {currentStreak > 0 && (
               <div className="bg-peaceful-warm/80 backdrop-blur-sm border border-white/30 rounded-full px-4 py-2 flex items-center gap-2">
                 <StreakIcon className="w-4 h-4 text-peaceful-text" />
-                <span className="text-sm font-medium text-peaceful-text">{currentStreak} day streak</span>
+                <span className="text-sm font-medium text-peaceful-text">{currentStreak} {currentStreak === 1 ? 'day' : 'days'} streak</span>
               </div>
             )}
           </div>

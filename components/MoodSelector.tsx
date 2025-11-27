@@ -14,14 +14,14 @@ export interface MoodIcon {
 }
 
 const defaultMoods: MoodIcon[] = [
-  { id: 'happy', icon: HappyIcon, label: 'Happy', color: '#F59E0B', bgColor: '#FEF3C7' },
-  { id: 'excited', icon: ExcitedIcon, label: 'Excited', color: '#EF4444', bgColor: '#FEE2E2' },
+  { id: 'happy', icon: HappyIcon, label: 'Happy', color: '#D4A574', bgColor: '#F5F0E8' },
+  { id: 'excited', icon: ExcitedIcon, label: 'Excited', color: '#D4A5A5', bgColor: '#F5F0F0' },
   { id: 'calm', icon: CalmIcon, label: 'Calm', color: '#10B981', bgColor: '#D1FAE5' },
-  { id: 'thoughtful', icon: ThoughtfulIcon, label: 'Thoughtful', color: '#8B5CF6', bgColor: '#EDE9FE' },
-  { id: 'sad', icon: SadIcon, label: 'Sad', color: '#6B7280', bgColor: '#F3F4F6' },
-  { id: 'anxious', icon: AnxiousIcon, label: 'Anxious', color: '#F97316', bgColor: '#FED7AA' },
-  { id: 'grateful', icon: GratefulIcon, label: 'Grateful', color: '#EC4899', bgColor: '#FCE7F3' },
-  { id: 'tired', icon: TiredIcon, label: 'Tired', color: '#6366F1', bgColor: '#E0E7FF' },
+  { id: 'thoughtful', icon: ThoughtfulIcon, label: 'Thoughtful', color: '#A5B4D4', bgColor: '#F0F2F5' },
+  { id: 'sad', icon: SadIcon, label: 'Sad', color: '#9CA3AF', bgColor: '#F3F4F6' },
+  { id: 'anxious', icon: AnxiousIcon, label: 'Anxious', color: '#D4B574', bgColor: '#F5F2E8' },
+  { id: 'grateful', icon: GratefulIcon, label: 'Grateful', color: '#D4A5C4', bgColor: '#F5F0F3' },
+  { id: 'tired', icon: TiredIcon, label: 'Tired', color: '#A5A5D4', bgColor: '#F0F0F5' },
 ];
 
 interface MoodSelectorProps {
