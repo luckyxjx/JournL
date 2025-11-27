@@ -9,7 +9,6 @@ const nextConfig = {
   
   // Bundle optimization
   experimental: {
-    optimizeCss: true,
     optimizePackageImports: ['framer-motion', '@tiptap/react'],
   },
   
