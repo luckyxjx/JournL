@@ -93,7 +93,7 @@ export default function ThemePage() {
         <div className="mt-12 text-center">
           <div className="bg-peaceful-warm/50 rounded-2xl p-8 border border-peaceful/20">
             <h3 className="text-xl font-semibold text-peaceful-text mb-2">More Themes Coming Soon</h3>
-            <p className="text-peaceful-text/70">We're working on more beautiful themes to personalize your journaling experience</p>
+            <p className="text-peaceful-text/70">We&apos;re working on more beautiful themes to personalize your journaling experience</p>
           </div>
         </div>
       </div>

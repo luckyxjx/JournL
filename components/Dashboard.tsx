@@ -90,7 +90,7 @@ export default function Dashboard() {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
-  }, []);
+  }, [user?.id]);
 
   const calculateStreak = async (): Promise<number> => {
     if (!user?.id) {

@@ -33,7 +33,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     loadProfileData();
-  }, []);
+  }, [user?.id]);
 
   const loadProfileData = async () => {
     try {
