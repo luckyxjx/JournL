@@ -18,6 +18,7 @@ export default function NewEntryPage() {
   const [photos, setPhotos] = useState<LocalPhoto[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [savedEntryId, setSavedEntryId] = useState<string | null>(null);
 
   const handleSave = async (editorContent: string, editorPhotos: LocalPhoto[]) => {
     try {
@@ -32,20 +33,31 @@ export default function NewEntryPage() {
       const textContent = editorContent.replace(/<[^>]*>/g, '');
       const wordCount = textContent.trim().split(/\s+/).filter(word => word.length > 0).length;
 
-      // Create entry in IndexedDB
       const now = new Date();
-      const entryId = await entryRepository.create({
-        userId: user?.id || 'guest',
-        content: editorContent,
-        mood: selectedMood || 'calm', // Default to calm if no mood selected
-        photos: editorPhotos,
-        createdAt: now,
-        updatedAt: now,
-        wordCount,
-        encrypted: false, // TODO: Implement encryption based on user settings
-      });
-
-      console.log('Entry saved successfully:', entryId);
+      
+      if (savedEntryId) {
+        // Update existing entry
+        await entryRepository.update(savedEntryId, {
+          content: editorContent,
+          mood: selectedMood || 'calm',
+          photos: editorPhotos,
+          updatedAt: now,
+          wordCount,
+        });
+      } else {
+        // Create new entry
+        const entryId = await entryRepository.create({
+          userId: user?.id || 'guest',
+          content: editorContent,
+          mood: selectedMood || 'calm',
+          photos: editorPhotos,
+          createdAt: now,
+          updatedAt: now,
+          wordCount,
+          encrypted: false,
+        });
+        setSavedEntryId(entryId);
+      }
     } catch (err) {
       console.error('Failed to save entry:', err);
       setError('Failed to save entry. Please try again.');

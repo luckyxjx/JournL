@@ -5,130 +5,257 @@ import { useState } from 'react';
 
 export type MoodTag = string;
 
-export interface CustomTag {
+export interface MoodIcon {
   id: string;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   color: string;
+  bgColor: string;
 }
 
-const defaultTags: CustomTag[] = [
-  { id: '1', label: 'Joy', color: '#9ED5C5' },
-  { id: '2', label: 'Calm', color: '#8EC3B0' },
-  { id: '3', label: 'Reflective', color: '#BCEAD5' },
-  { id: '4', label: 'Thoughtful', color: '#628E75' },
+const defaultMoods: MoodIcon[] = [
+  { id: 'happy', icon: HappyIcon, label: 'Happy', color: '#F59E0B', bgColor: '#FEF3C7' },
+  { id: 'excited', icon: ExcitedIcon, label: 'Excited', color: '#EF4444', bgColor: '#FEE2E2' },
+  { id: 'calm', icon: CalmIcon, label: 'Calm', color: '#10B981', bgColor: '#D1FAE5' },
+  { id: 'thoughtful', icon: ThoughtfulIcon, label: 'Thoughtful', color: '#8B5CF6', bgColor: '#EDE9FE' },
+  { id: 'sad', icon: SadIcon, label: 'Sad', color: '#6B7280', bgColor: '#F3F4F6' },
+  { id: 'anxious', icon: AnxiousIcon, label: 'Anxious', color: '#F97316', bgColor: '#FED7AA' },
+  { id: 'grateful', icon: GratefulIcon, label: 'Grateful', color: '#EC4899', bgColor: '#FCE7F3' },
+  { id: 'tired', icon: TiredIcon, label: 'Tired', color: '#6366F1', bgColor: '#E0E7FF' },
 ];
 
-interface TagSelectorProps {
+interface MoodSelectorProps {
   selectedMood?: MoodTag;
   onMoodSelect: (tagId: string, label: string) => void;
   className?: string;
 }
 
-export default function MoodSelector({ selectedMood, onMoodSelect, className = '' }: TagSelectorProps) {
-  const [tags, setTags] = useState<CustomTag[]>(defaultTags);
-  const [editingTag, setEditingTag] = useState<string | null>(null);
-  const [editValue, setEditValue] = useState('');
+export default function MoodSelector({ selectedMood, onMoodSelect, className = '' }: MoodSelectorProps) {
+  const [customMood, setCustomMood] = useState('');
+  const [showCustomInput, setShowCustomInput] = useState(false);
 
-  const handleTagEdit = (tagId: string, currentLabel: string) => {
-    setEditingTag(tagId);
-    setEditValue(currentLabel);
+  const handleCustomMoodSave = () => {
+    if (customMood.trim()) {
+      onMoodSelect('custom', customMood.trim());
+      setShowCustomInput(false);
+    }
   };
 
-  const handleSaveEdit = (tagId: string) => {
-    if (editValue.trim() && editValue.length <= 15) {
-      setTags(prev => prev.map(tag => 
-        tag.id === tagId ? { ...tag, label: editValue.trim() } : tag
-      ));
-    }
-    setEditingTag(null);
-    setEditValue('');
-  };
-
-  const getTextColor = (bgColor: string) => {
-    // Check if dark theme is active
-    const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
-    if (isDarkTheme) {
-      return '#e6f5ed'; // Use bright text in dark mode for visibility
-    }
-    
-    const hex = bgColor.replace('#', '');
-    const r = parseInt(hex.substr(0, 2), 16);
-    const g = parseInt(hex.substr(2, 2), 16);
-    const b = parseInt(hex.substr(4, 2), 16);
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    return luminance > 0.5 ? '#2D3748' : '#FFFFFF';
+  const handleCustomMoodCancel = () => {
+    setCustomMood('');
+    setShowCustomInput(false);
   };
 
   return (
-    <div className={`flex flex-wrap gap-2 md:gap-3 ${className}`}>
-      {tags.map((tag) => {
-        const isSelected = selectedMood === tag.id;
-        const isEditing = editingTag === tag.id;
-        const textColor = getTextColor(tag.color);
-        
-        return (
-          <motion.div
-            key={tag.id}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className={`
-              mood-tag relative px-3 md:px-4 py-2 md:py-3 rounded-2xl font-medium text-xs md:text-sm
-              transition-all duration-200 ease-out
-              flex items-center gap-1 md:gap-2 min-w-[80px] md:min-w-[100px] justify-center
-              ${isSelected 
-                ? 'shadow-lg ring-2 ring-white ring-offset-2 scale-105' 
-                : 'shadow-md hover:shadow-lg'
-              }
-            `}
-            style={{ backgroundColor: tag.color }}
-          >
-            {isEditing ? (
-              <input
-                type="text"
-                value={editValue}
-                onChange={(e) => setEditValue(e.target.value)}
-                onBlur={() => handleSaveEdit(tag.id)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleSaveEdit(tag.id);
-                  if (e.key === 'Escape') { setEditingTag(null); setEditValue(''); }
-                }}
-                maxLength={15}
-                className="bg-transparent border-none outline-none text-center w-full"
-                style={{ color: textColor }}
-                autoFocus
+    <div className={`space-y-4 ${className}`}>
+      {/* Emoji Mood Options */}
+      <div className="flex flex-wrap gap-2 md:gap-3">
+        {defaultMoods.map((mood) => {
+          const isSelected = selectedMood === mood.id;
+          const IconComponent = mood.icon;
+          
+          return (
+            <motion.button
+              key={mood.id}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => onMoodSelect(mood.id, mood.label)}
+              className={`
+                relative p-3 md:p-4 rounded-2xl
+                transition-all duration-200 ease-out
+                flex flex-col items-center gap-2 min-w-[70px] md:min-w-[80px]
+                shadow-md hover:shadow-lg
+                ${isSelected ? 'ring-2 ring-offset-2 scale-105' : ''}
+              `}
+              style={{
+                backgroundColor: isSelected ? mood.color + '20' : mood.bgColor,
+                borderColor: isSelected ? mood.color : 'transparent',
+                borderWidth: isSelected ? '2px' : '0px',
+              }}
+            >
+              <IconComponent 
+                className="w-6 h-6 md:w-8 md:h-8" 
+                style={{ color: mood.color }}
               />
-            ) : (
-              <>
-                <button
-                  onClick={() => onMoodSelect(tag.id, tag.label)}
-                  className="flex-1 text-center"
-                  style={{ color: textColor }}
-                >
-                  {tag.label}
-                </button>
-                <button
-                  onClick={() => handleTagEdit(tag.id, tag.label)}
-                  className="ml-1 opacity-60 hover:opacity-100"
-                  style={{ color: textColor }}
-                >
-                  ✎
-                </button>
-              </>
-            )}
-            
-            {isSelected && !isEditing && (
-              <motion.span
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="ml-1"
-                style={{ color: textColor }}
+              <span 
+                className="text-xs md:text-sm font-medium"
+                style={{ color: mood.color }}
               >
-                ✓
-              </motion.span>
-            )}
-          </motion.div>
-        );
-      })}
+                {mood.label}
+              </span>
+              {isSelected && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: mood.color }}
+                >
+                  <span className="text-white text-xs">✓</span>
+                </motion.div>
+              )}
+            </motion.button>
+          );
+        })}
+        
+        {/* Custom Mood Button */}
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setShowCustomInput(true)}
+          className={`
+            relative p-3 md:p-4 rounded-2xl
+            transition-all duration-200 ease-out
+            flex flex-col items-center gap-2 min-w-[70px] md:min-w-[80px]
+            shadow-md hover:shadow-lg
+            ${selectedMood === 'custom'
+              ? 'bg-peaceful-accent/20 ring-2 ring-peaceful-accent/50 scale-105'
+              : 'bg-peaceful-card/50 hover:bg-peaceful-card/70 border-2 border-dashed border-peaceful-accent/30'
+            }
+          `}
+        >
+          <CustomIcon className="w-6 h-6 md:w-8 md:h-8 text-peaceful-accent" />
+          <span className="text-xs md:text-sm text-peaceful-accent font-medium">
+            Custom
+          </span>
+        </motion.button>
+      </div>
+
+      {/* Custom Mood Input */}
+      {showCustomInput && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-peaceful-card/70 rounded-2xl p-4 border border-peaceful-accent/20"
+        >
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={customMood}
+              onChange={(e) => setCustomMood(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleCustomMoodSave();
+                if (e.key === 'Escape') handleCustomMoodCancel();
+              }}
+              placeholder="How are you feeling?"
+              maxLength={20}
+              className="flex-1 px-3 py-2 rounded-xl bg-peaceful-bg border border-peaceful-accent/20 text-peaceful-text placeholder-peaceful-text/50 focus:outline-none focus:ring-2 focus:ring-peaceful-accent/50"
+              autoFocus
+            />
+            <button
+              onClick={handleCustomMoodSave}
+              disabled={!customMood.trim()}
+              className="px-4 py-2 bg-peaceful-accent text-white rounded-xl hover:bg-peaceful-accent/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              ✓
+            </button>
+            <button
+              onClick={handleCustomMoodCancel}
+              className="px-4 py-2 bg-peaceful-card text-peaceful-text rounded-xl hover:bg-peaceful-hover transition-colors"
+            >
+              ✕
+            </button>
+          </div>
+        </motion.div>
+      )}
     </div>
+  );
+}
+
+// Custom Icon Components
+function HappyIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} fill="currentColor" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"/>
+      <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
+      <circle cx="15" cy="9" r="1.5" fill="currentColor"/>
+      <path d="M8 15s1.5 2 4 2 4-2 4-2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none"/>
+    </svg>
+  );
+}
+
+function ExcitedIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} fill="currentColor" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"/>
+      <path d="M7 9l2-2 2 2M15 9l2-2 2 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      <ellipse cx="12" cy="15" rx="3" ry="2" fill="none" stroke="currentColor" strokeWidth="2"/>
+    </svg>
+  );
+}
+
+function CalmIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} fill="currentColor" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"/>
+      <path d="M8 10s0-2 2-2 2 2 2 2M14 10s0-2 2-2 2 2 2 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      <path d="M9 16h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function ThoughtfulIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} fill="currentColor" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"/>
+      <circle cx="9" cy="10" r="1" fill="currentColor"/>
+      <circle cx="15" cy="10" r="1" fill="currentColor"/>
+      <path d="M10 16s1-1 2-1 2 1 2 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      <circle cx="18" cy="6" r="2" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+      <circle cx="20" cy="4" r="1" fill="none" stroke="currentColor" strokeWidth="1"/>
+    </svg>
+  );
+}
+
+function SadIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} fill="currentColor" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"/>
+      <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
+      <circle cx="15" cy="9" r="1.5" fill="currentColor"/>
+      <path d="M16 17s-1.5-2-4-2-4 2-4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      <path d="M7 7l2 2M17 7l-2 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function AnxiousIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} fill="currentColor" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"/>
+      <circle cx="9" cy="10" r="1.5" fill="currentColor"/>
+      <circle cx="15" cy="10" r="1.5" fill="currentColor"/>
+      <path d="M9 16h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M6 6l2 2M18 6l-2 2M6 18l2-2M18 18l-2-2" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function GratefulIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} fill="currentColor" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"/>
+      <path d="M8 10s0-2 2-2 2 2 2 2M14 10s0-2 2-2 2 2 2 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      <path d="M8 15s1.5 2 4 2 4-2 4-2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      <path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function TiredIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} fill="currentColor" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"/>
+      <path d="M7 10h4M13 10h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      <circle cx="12" cy="16" r="2" fill="none" stroke="currentColor" strokeWidth="2"/>
+      <path d="M8 4l1 2M16 4l-1 2M20 8l-2 1M20 16l-2-1M4 8l2 1M4 16l2-1" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function CustomIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+    </svg>
   );
 }

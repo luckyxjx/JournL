@@ -47,7 +47,7 @@ export default function EntryEditor({
     immediatelyRender: false, // Fix SSR hydration mismatch
     editorProps: {
       attributes: {
-        class: 'prose prose-lg max-w-none focus:outline-none min-h-[300px] p-4',
+        class: 'prose prose-lg max-w-none focus:outline-none min-h-[300px] p-4 resize-none overflow-hidden',
       },
     },
     onUpdate: ({ editor }) => {
@@ -153,12 +153,14 @@ export default function EntryEditor({
 
       {/* Editor Content */}
       <div className="bg-peaceful-card rounded-b-3xl shadow-sm border border-t-0 border-peaceful-accent/20">
-        <EditorContent editor={editor} />
-      </div>
-
-      {/* Photo Attachment */}
-      <div className="mt-4">
-        <PhotoAttachment photos={photos} onPhotosChange={handlePhotosChange} />
+        <div className="[&_.ProseMirror]:min-h-[300px] [&_.ProseMirror]:max-h-none [&_.ProseMirror]:overflow-visible">
+          <EditorContent editor={editor} />
+        </div>
+        
+        {/* Photo Attachment inside editor */}
+        <div className="px-4 pb-4 border-t border-peaceful-accent/10">
+          <PhotoAttachment photos={photos} onPhotosChange={handlePhotosChange} />
+        </div>
       </div>
 
       {/* Autosave Indicator */}
