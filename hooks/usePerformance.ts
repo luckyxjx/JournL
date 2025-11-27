@@ -22,7 +22,7 @@ export function usePerformance() {
   // Throttle function for scroll/resize events
   const throttle = useCallback((func: Function, limit: number) => {
     let inThrottle: boolean;
-    return function executedFunction(...args: any[]) {
+    return function executedFunction(this: any, ...args: any[]) {
       if (!inThrottle) {
         func.apply(this, args);
         inThrottle = true;
