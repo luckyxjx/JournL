@@ -3,12 +3,17 @@
 import { motion } from 'framer-motion';
 import { themes, Theme } from '@/lib/themes';
 import { useTheme } from '@/hooks/useTheme';
+import ThemeTransition from '@/components/ThemeTransition';
 
 export default function ThemePage() {
-  const { currentTheme, changeTheme } = useTheme();
+  const { currentTheme, changeTheme, isTransitioning, transitionData, completeTransition } = useTheme();
 
-  const handleThemeSelect = (theme: Theme) => {
-    changeTheme(theme.id);
+  const handleThemeSelect = (theme: Theme, event: React.MouseEvent) => {
+    const clickPosition = {
+      x: event.clientX,
+      y: event.clientY
+    };
+    changeTheme(theme.id, clickPosition);
   };
 
   return (
@@ -39,7 +44,7 @@ export default function ThemePage() {
               className={`relative cursor-pointer group ${
                 currentTheme.id === theme.id ? 'ring-2 ring-peaceful-accent' : ''
               }`}
-              onClick={() => handleThemeSelect(theme)}
+              onClick={(e) => handleThemeSelect(theme, e)}
             >
               <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105">
                 {/* Theme Preview */}
@@ -96,6 +101,14 @@ export default function ThemePage() {
             <p className="text-peaceful-text/70">We&apos;re working on more beautiful themes to personalize your journaling experience</p>
           </div>
         </div>
+        
+        {/* Theme Transition Effect */}
+        <ThemeTransition
+          isActive={isTransitioning}
+          themeId={transitionData?.themeId || ''}
+          clickPosition={transitionData?.clickPosition || { x: 0, y: 0 }}
+          onComplete={completeTransition}
+        />
       </div>
     </div>
   );
