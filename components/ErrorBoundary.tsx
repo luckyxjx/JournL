@@ -56,7 +56,7 @@ function DefaultErrorFallback({ error, retry }: { error?: Error; retry: () => vo
         </div>
         <h2 className="text-xl font-bold text-peaceful-text mb-2">Something went wrong</h2>
         <p className="text-peaceful-text/70 mb-6">
-          Don't worry, your journal entries are safe. Let's try to get you back on track.
+          Don&apos;t worry, your journal entries are safe. Let&apos;s try to get you back on track.
         </p>
         <div className="space-y-3">
           <motion.button
