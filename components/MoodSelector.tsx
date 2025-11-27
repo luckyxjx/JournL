@@ -7,7 +7,7 @@ export type MoodTag = string;
 
 export interface MoodIcon {
   id: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   label: string;
   color: string;
   bgColor: string;
@@ -214,6 +214,51 @@ function SadIcon({ className, style }: { className?: string; style?: React.CSSPr
       <circle cx="15" cy="9" r="1.5" fill="currentColor"/>
       <path d="M16 17s-1.5-2-4-2-4 2-4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none"/>
       <path d="M7 7l2 2M17 7l-2 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function AnxiousIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} fill="currentColor" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"/>
+      <circle cx="9" cy="10" r="1.5" fill="currentColor"/>
+      <circle cx="15" cy="10" r="1.5" fill="currentColor"/>
+      <path d="M9 16h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M6 6l2 2M18 6l-2 2M6 18l2-2M18 18l-2-2" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function GratefulIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} fill="currentColor" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"/>
+      <path d="M8 10s0-2 2-2 2 2 2 2M14 10s0-2 2-2 2 2 2 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      <path d="M8 15s1.5 2 4 2 4-2 4-2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      <path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function TiredIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} fill="currentColor" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"/>
+      <path d="M7 10h4M13 10h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      <circle cx="12" cy="16" r="2" fill="none" stroke="currentColor" strokeWidth="2"/>
+      <path d="M8 4l1 2M16 4l-1 2M20 8l-2 1M20 16l-2-1M4 8l2 1M4 16l2-1" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+function CustomIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+    </svg>
+  );
+}e="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
     </svg>
   );
 }
