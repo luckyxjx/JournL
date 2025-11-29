@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { UserAvatar } from '@/lib/types/avatar';
-import { AvatarSVGComponents } from './AvatarIcons';
+import { AvatarSVGComponents, AvatarBaseParts } from './AvatarIcons';
 
 interface AvatarProps {
   avatar: UserAvatar;
@@ -31,8 +31,8 @@ export default function Avatar({ avatar, size = 'md', className = '' }: AvatarPr
           </motion.g>
         )}
         
-        {/* Base Avatar Circle */}
-        <circle cx="50" cy="50" r="35" fill="#E2E8F0" stroke="#CBD5E0" strokeWidth="2" />
+        {/* Base Avatar Body */}
+        {AvatarBaseParts.body}
         
         {/* Hat - with bounce animation */}
         {avatar.hat && (
@@ -50,16 +50,35 @@ export default function Avatar({ avatar, size = 'md', className = '' }: AvatarPr
           AvatarSVGComponents[avatar.eyes as keyof typeof AvatarSVGComponents] :
           // Default eyes
           <g>
-            <circle cx="35" cy="45" r="2" fill="#2D3748" />
-            <circle cx="65" cy="45" r="2" fill="#2D3748" />
+            <circle cx="45" cy="32" r="2" fill="#2D3748" />
+            <circle cx="55" cy="32" r="2" fill="#2D3748" />
           </g>
         }
         
         {/* Mouth */}
-        <path d="M40 60 Q50 70 60 60" stroke="#2D3748" strokeWidth="2" fill="none" />
+        <path d="M45 40 Q50 43 55 40" stroke="#2D3748" strokeWidth="2" fill="none" />
         
-        {/* Accessories */}
-        {avatar.accessory && AvatarSVGComponents[avatar.accessory as keyof typeof AvatarSVGComponents]}
+        {/* Clothing */}
+        {avatar.clothing && (
+          <motion.g
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            {AvatarSVGComponents[avatar.clothing as keyof typeof AvatarSVGComponents]}
+          </motion.g>
+        )}
+        
+        {/* Accessories - with slide-in animation */}
+        {avatar.accessory && (
+          <motion.g
+            initial={{ x: 10, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+          >
+            {AvatarSVGComponents[avatar.accessory as keyof typeof AvatarSVGComponents]}
+          </motion.g>
+        )}
       </svg>
     </div>
   );

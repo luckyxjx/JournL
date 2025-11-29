@@ -1,4 +1,4 @@
-export type AvatarItemType = 'eyes' | 'hat' | 'accessory' | 'background';
+export type AvatarItemType = 'eyes' | 'hat' | 'accessory' | 'background' | 'clothing';
 
 export interface AvatarItem {
   id: string;
@@ -13,6 +13,7 @@ export interface UserAvatar {
   hat?: string;
   accessory?: string;
   background?: string;
+  clothing?: string;
 }
 
 export interface AvatarUnlockCondition {

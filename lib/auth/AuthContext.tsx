@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react'
 import { User, Session } from '@supabase/supabase-js'
-import { supabase } from '../supabase'
+import { supabase } from '../services/supabase/client'
 
 interface AuthContextType {
   user: User | null
@@ -36,9 +36,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       try {
         // Check for guest mode with timestamp validation
-        const guestData = localStorage.getItem('guestMode')
-        if (guestData) {
-          try {
+        try {
+          const guestData = localStorage.getItem('guestMode')
+          if (guestData) {
             const { enabled, timestamp } = JSON.parse(guestData)
             const isValid = enabled && (Date.now() - timestamp < 24 * 60 * 60 * 1000) // 24h expiry
             if (isValid) {
@@ -50,8 +50,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             } else {
               localStorage.removeItem('guestMode')
             }
-          } catch (e) {
+          }
+        } catch (e) {
+          try {
             localStorage.removeItem('guestMode')
+          } catch (removeError) {
+            console.warn('Failed to remove invalid guest data:', removeError)
           }
         }
 
@@ -81,7 +85,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setLoading(false)
         // Clear guest mode if user signs in
         if (session?.user) {
-          localStorage.removeItem('guestMode')
+          try {
+            localStorage.removeItem('guestMode')
+          } catch (e) {
+            console.warn('Failed to clear guest mode:', e)
+          }
           setIsGuest(false)
         }
       }
@@ -131,11 +139,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false)
     } catch (error) {
       console.error('Failed to set guest mode:', error)
+      // Fallback: set guest mode without localStorage
+      setIsGuest(true)
+      setLoading(false)
     }
   }
 
   const signOut = async () => {
-    localStorage.removeItem('guestMode')
+    try {
+      localStorage.removeItem('guestMode')
+    } catch (e) {
+      console.warn('Failed to clear guest mode on signout:', e)
+    }
     setIsGuest(false)
     const { error } = await supabase.auth.signOut()
     if (error) throw error

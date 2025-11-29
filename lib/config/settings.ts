@@ -1,4 +1,4 @@
-import { MetadataSync } from './sync';
+import { MetadataSync } from '../sync';
 
 export interface UserSettings {
   theme: 'pastel' | 'dark';

@@ -1,4 +1,4 @@
-import { EntryRepository } from './storage/EntryRepository';
+import { EntryRepository } from '../../storage/EntryRepository';
 
 export class StreakService {
   private entryRepo = new EntryRepository();
@@ -53,7 +53,7 @@ export class StreakService {
     localStorage.setItem(`streak_${userId}`, streak.toString());
     
     if (userId && !userId.startsWith('guest_')) {
-      const sync = new (await import('./sync')).MetadataSync();
+      const sync = new (await import('../../sync')).MetadataSync();
       await sync.syncStreak(userId, streak);
     }
     

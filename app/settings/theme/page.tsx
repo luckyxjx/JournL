@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { themes, Theme } from '@/lib/themes';
+import { themes, Theme } from '@/lib/config/themes';
 import { useTheme } from '@/hooks/useTheme';
 import ThemeTransition from '@/components/ThemeTransition';
 

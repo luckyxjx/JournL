@@ -6,7 +6,7 @@ import OfflineIndicator from '@/components/OfflineIndicator'
 import ThemeProvider from '@/components/ThemeProvider'
 import { AuthProvider } from '@/lib/auth'
 import { Merriweather, Inter } from 'next/font/google'
-import { PWAService } from '@/lib/pwa'
+import { PWAService } from '@/lib/utils/pwa.utils'
 
 const merriweather = Merriweather({ 
   subsets: ['latin'],

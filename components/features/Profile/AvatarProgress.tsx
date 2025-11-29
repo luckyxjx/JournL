@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { AvatarSystem } from '@/lib/avatar-system';
+import { AvatarSystem } from '@/lib/core/user/avatar.service';
 import { UserStats } from '@/lib/types/avatar';
 
 interface AvatarProgressProps {

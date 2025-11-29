@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import EntryEditor from '@/components/EntryEditor';
-import MoodSelector from '@/components/MoodSelector';
+import EntryEditor from '@/components/features/Journal/EntryEditor';
+import MoodSelector from '@/components/features/Journal/MoodSelector';
 import { entryRepository } from '@/lib/storage/EntryRepository';
 import { LocalPhoto, JournalEntry, MoodTag } from '@/lib/storage/db';
 import { motion, AnimatePresence } from 'framer-motion';

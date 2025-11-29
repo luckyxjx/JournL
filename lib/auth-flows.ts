@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { supabase } from './services/supabase/client';
 
 export class AuthFlows {
   async signInWithGoogle() {

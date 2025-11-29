@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import EntryEditor from '@/components/EntryEditor';
-import MoodSelector, { type MoodTag } from '@/components/MoodSelector';
+import EntryEditor from '@/components/features/Journal/EntryEditor';
+import MoodSelector, { type MoodTag } from '@/components/features/Journal/MoodSelector';
 import { LocalPhoto } from '@/lib/storage/db';
 
 export default function EditorDemoPage() {

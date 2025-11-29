@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { signInWithGoogle } from '@/lib/supabase';
+import { signInWithGoogle } from '@/lib/services/supabase/client';
 
 export default function GoogleLoginButton() {
   const handleGoogleLogin = async () => {

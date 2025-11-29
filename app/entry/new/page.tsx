@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import EntryEditor from '@/components/EntryEditor';
-import MoodSelector from '@/components/MoodSelector';
+import EntryEditor from '@/components/features/Journal/EntryEditor';
+import MoodSelector from '@/components/features/Journal/MoodSelector';
 import { entryRepository } from '@/lib/storage/EntryRepository';
 import { LocalPhoto, MoodTag } from '@/lib/storage/db';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/lib/auth';
-import AuthGuard from '@/components/AuthGuard';
+import AuthGuard from '@/components/features/Auth/AuthGuard';
 
 export default function NewEntryPage() {
   const router = useRouter();

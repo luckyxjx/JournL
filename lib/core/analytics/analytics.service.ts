@@ -1,4 +1,4 @@
-import { EntryRepository } from './storage/EntryRepository';
+import { EntryRepository } from '../../storage/EntryRepository';
 
 export class AnalyticsEngine {
   private entryRepo = new EntryRepository();

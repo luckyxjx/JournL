@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { WriteIcon } from './icons/MoodIcons';
+import { WriteIcon } from '../../icons/MoodIcons';
 
 export default function FloatingActionButton() {
   return (

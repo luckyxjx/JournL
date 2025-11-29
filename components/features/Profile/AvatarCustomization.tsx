@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AvatarSystem } from '@/lib/avatar-system';
+import { AvatarSystem } from '@/lib/core/user/avatar.service';
 import { AvatarItem, UserAvatar, AvatarItemType } from '@/lib/types/avatar';
 import Avatar from './Avatar';
 

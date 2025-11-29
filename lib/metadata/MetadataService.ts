@@ -1,4 +1,4 @@
-import { supabase } from '../supabase';
+import { supabase } from '../services/supabase/client';
 import type {
   UserMetadata,
   UserMetadataInsert,

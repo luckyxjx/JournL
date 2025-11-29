@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { AvatarSystem } from '@/lib/avatar-system';
+import { AvatarSystem } from '@/lib/core/user/avatar.service';
 import { AvatarItem, UserStats } from '@/lib/types/avatar';
 import { entryRepository } from '@/lib/storage/EntryRepository';
-import { StreakService } from '@/lib/streak';
+import { StreakService } from '@/lib/core/journal/streak.service';
 
 export function useAvatarUnlocks() {
   const [newUnlocks, setNewUnlocks] = useState<AvatarItem[]>([]);

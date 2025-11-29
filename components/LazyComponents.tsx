@@ -1,8 +1,8 @@
 import { lazy } from 'react';
 
 // Lazy load heavy components to improve initial bundle size
-export const LazyEntryEditor = lazy(() => import('./EntryEditor'));
-export const LazyPhotoAttachment = lazy(() => import('./PhotoAttachment'));
+export const LazyEntryEditor = lazy(() => import('./features/Journal/EntryEditor'));
+export const LazyPhotoAttachment = lazy(() => import('./features/Journal/PhotoAttachment'));
 export const LazyOnboardingCarousel = lazy(() => import('./OnboardingCarousel'));
 
 // Loading fallback component

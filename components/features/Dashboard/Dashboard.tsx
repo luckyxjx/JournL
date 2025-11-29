@@ -1,16 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import MoodSelector from './MoodSelector';
+import MoodSelector from '../Journal/MoodSelector';
 import { entryRepository } from '@/lib/storage/EntryRepository';
 import { JournalEntry, MoodTag } from '@/lib/storage/db';
-import { StreakIcon, WriteIcon, JournalIcon, OfflineIcon, JoyIcon, CalmIcon, ReflectiveIcon, SadIcon } from './icons/MoodIcons';
+import { StreakIcon, WriteIcon, JournalIcon, OfflineIcon, JoyIcon, CalmIcon, ReflectiveIcon, SadIcon } from '../../icons/MoodIcons';
 import FloatingActionButton from './FloatingActionButton';
 import { useAuth } from '@/lib/auth';
-import { StreakService } from '@/lib/streak';
-import { AchievementSystem } from '@/lib/achievements';
+import { StreakService } from '@/lib/core/journal/streak.service';
+import { AchievementSystem } from '@/lib/core/user/achievements.service';
 import { SettingsIcon, AnalyticsIcon, UserIcon } from '@/components/icons/SettingsIcons';
 
 interface EntryPreview {
@@ -28,7 +28,7 @@ export default function Dashboard() {
   const [isOffline, setIsOffline] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const calculateStreak = async (): Promise<number> => {
+  const calculateStreak = useCallback(async (): Promise<number> => {
     if (!user?.id) {
       console.warn('No user ID available for streak calculation');
       return 0;
@@ -40,7 +40,7 @@ export default function Dashboard() {
       console.error('Failed to calculate streak:', error);
       return 0;
     }
-  };
+  }, [user?.id]);
 
   useEffect(() => {
     // Only run on client side

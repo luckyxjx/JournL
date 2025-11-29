@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { themes, Theme, applyTheme } from '@/lib/themes';
+import { themes, Theme, applyTheme } from '@/lib/config/themes';
 
 export function useTheme() {
   const [currentTheme, setCurrentTheme] = useState<Theme>(themes[0]);

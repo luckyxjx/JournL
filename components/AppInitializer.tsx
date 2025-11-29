@@ -5,7 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import SplashScreen from './SplashScreen';
 import OnboardingCarousel from './OnboardingCarousel';
 import { hasCompletedOnboarding, setOnboardingCompleted } from '@/lib/onboarding';
-import { SettingsService } from '@/lib/settings';
+import { SettingsService } from '@/lib/config/settings';
 
 type InitializationState = 'splash' | 'onboarding' | 'ready';
 

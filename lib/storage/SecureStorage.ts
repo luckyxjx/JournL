@@ -1,4 +1,4 @@
-import { EncryptionService } from '../encryption';
+import { EncryptionService } from '../services/storage/encryption.service';
 import { JournalEntry } from './db';
 
 export class SecureStorage {

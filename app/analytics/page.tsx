@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, PieLabelRenderProps } from 'recharts';
-import { AnalyticsEngine } from '@/lib/analytics';
+import { AnalyticsEngine } from '@/lib/core/analytics/analytics.service';
 import { useAuth } from '@/lib/auth';
 
 interface MoodData {

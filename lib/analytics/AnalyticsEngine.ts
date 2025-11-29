@@ -1,5 +1,5 @@
 import { entryRepository } from '@/lib/storage/EntryRepository';
-import { MoodTag } from '@/components/MoodSelector';
+import { MoodTag } from '@/components/features/Journal/MoodSelector';
 
 export interface MoodData {
   mood: MoodTag;

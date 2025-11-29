@@ -1,4 +1,4 @@
-import { AvatarItem, UserAvatar, UserStats, AvatarUnlockCondition } from './types/avatar';
+import { AvatarItem, UserAvatar, UserStats, AvatarUnlockCondition } from '../../types/avatar';
 
 export class AvatarSystem {
   private static readonly STORAGE_KEY = 'user_avatar';
