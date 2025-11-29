@@ -35,14 +35,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       try {
-        // Check for guest mode first
-        const guestMode = localStorage.getItem('guestMode')
-        if (guestMode === 'true') {
-          if (mounted) {
-            setIsGuest(true)
-            setLoading(false)
+        // Check for guest mode with timestamp validation
+        const guestData = localStorage.getItem('guestMode')
+        if (guestData) {
+          try {
+            const { enabled, timestamp } = JSON.parse(guestData)
+            const isValid = enabled && (Date.now() - timestamp < 24 * 60 * 60 * 1000) // 24h expiry
+            if (isValid) {
+              if (mounted) {
+                setIsGuest(true)
+                setLoading(false)
+              }
+              return
+            } else {
+              localStorage.removeItem('guestMode')
+            }
+          } catch (e) {
+            localStorage.removeItem('guestMode')
           }
-          return
         }
 
         // Get initial session
@@ -63,7 +73,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state change:', event, session?.user?.email || 'no user')
       if (mounted) {
         setSession(session)
         setUser(session?.user ?? null)
@@ -114,7 +125,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signInAsGuest = () => {
     try {
-      localStorage.setItem('guestMode', 'true')
+      const guestData = { enabled: true, timestamp: Date.now() }
+      localStorage.setItem('guestMode', JSON.stringify(guestData))
       setIsGuest(true)
       setLoading(false)
     } catch (error) {

@@ -31,9 +31,10 @@ export default function PhotoAttachment({
       const newPhotos: LocalPhoto[] = [];
 
       for (const file of Array.from(files)) {
-        // Validate file type
-        if (!file.type.startsWith('image/')) {
-          setError('Please select only image files');
+        // Multi-layer validation: MIME type, extension, and file signature
+        const isValid = await validateImageFile(file);
+        if (!isValid.valid) {
+          setError(isValid.error);
           continue;
         }
 
@@ -44,8 +45,14 @@ export default function PhotoAttachment({
           continue;
         }
 
-        // Convert to base64 with compression if needed
+        // Convert to base64 with compression and sanitization
         const dataUrl = await processImage(file, maxSizeMB);
+        
+        // Validate data URL format to prevent XSS
+        if (!isValidDataUrl(dataUrl)) {
+          setError('Invalid image data format');
+          continue;
+        }
 
         const photo: LocalPhoto = {
           id: crypto.randomUUID(),
@@ -284,6 +291,63 @@ async function compressImage(dataUrl: string, maxSizeMB: number): Promise<string
 
     img.src = dataUrl;
   });
+}
+
+// Data URL validation to prevent XSS
+function isValidDataUrl(dataUrl: string): boolean {
+  const validPrefixes = [
+    'data:image/jpeg;base64,',
+    'data:image/jpg;base64,',
+    'data:image/png;base64,',
+    'data:image/gif;base64,',
+    'data:image/webp;base64,'
+  ];
+  
+  return validPrefixes.some(prefix => dataUrl.startsWith(prefix)) &&
+         /^[A-Za-z0-9+/=]+$/.test(dataUrl.split(',')[1] || '');
+}
+
+// Multi-layer file validation with detailed error reporting
+async function validateImageFile(file: File): Promise<{valid: boolean, error: string}> {
+  // Layer 1: MIME type validation
+  const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+  if (!allowedMimeTypes.includes(file.type)) {
+    return {valid: false, error: 'Invalid file type. Only JPEG, PNG, GIF, and WebP are supported.'};
+  }
+  
+  // Layer 2: File extension validation
+  const fileName = file.name.toLowerCase();
+  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+  const hasValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+  if (!hasValidExtension) {
+    return {valid: false, error: 'Invalid file extension. Use .jpg, .jpeg, .png, .gif, or .webp'};
+  }
+  
+  // Layer 3: File signature validation (magic bytes)
+  try {
+    const buffer = await file.arrayBuffer();
+    const bytes = new Uint8Array(buffer.slice(0, 12));
+    
+    const signatures = {
+      jpeg: [0xFF, 0xD8, 0xFF],
+      png: [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A],
+      gif87a: [0x47, 0x49, 0x46, 0x38, 0x37, 0x61],
+      gif89a: [0x47, 0x49, 0x46, 0x38, 0x39, 0x61],
+      webp: [0x52, 0x49, 0x46, 0x46]
+    };
+    
+    const hasValidSignature = Object.values(signatures).some(sig => 
+      sig.every((byte, i) => bytes[i] === byte)
+    );
+    
+    if (!hasValidSignature) {
+      return {valid: false, error: 'File appears to be corrupted or not a valid image.'};
+    }
+    
+    return {valid: true, error: ''};
+  } catch (error) {
+    return {valid: false, error: 'Unable to read file for validation.'};
+  }
 }
 
 // Icon Components

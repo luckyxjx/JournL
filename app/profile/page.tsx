@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/lib/auth';
@@ -11,6 +11,14 @@ import AuthGuard from '@/components/AuthGuard';
 import { JournalEntry, MoodTag } from '@/lib/storage/db';
 import { UserIcon, CalendarIcon, TrendingUpIcon, BookOpenIcon, PaletteIcon } from '@/components/icons/SettingsIcons';
 import { JoyIcon, CalmIcon, ReflectiveIcon, SadIcon } from '@/components/icons/MoodIcons';
+import Avatar from '@/components/Avatar';
+import AvatarCustomization from '@/components/AvatarCustomization';
+import AchievementNotification from '@/components/AchievementNotification';
+import AvatarProgress from '@/components/AvatarProgress';
+import AvatarExport from '@/components/AvatarExport';
+import { AvatarSystem } from '@/lib/avatar-system';
+import { UserAvatar, AvatarItem } from '@/lib/types/avatar';
+import { UserStats as AvatarUserStats } from '@/lib/types/avatar';
 
 interface UserStats {
   totalEntries: number;
@@ -30,12 +38,13 @@ export default function ProfilePage() {
   const [recentEntries, setRecentEntries] = useState<JournalEntry[]>([]);
   const [settings, setSettings] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [userAvatar, setUserAvatar] = useState<UserAvatar>({});
+  const [showAvatarCustomization, setShowAvatarCustomization] = useState(false);
+  const [newUnlocks, setNewUnlocks] = useState<AvatarItem[]>([]);
+  const [avatarStats, setAvatarStats] = useState<AvatarUserStats | null>(null);
+  const [showExport, setShowExport] = useState(false);
 
-  useEffect(() => {
-    loadProfileData();
-  }, [user?.id]);
-
-  const loadProfileData = async () => {
+  const loadProfileData = useCallback(async () => {
     try {
       setLoading(true);
       
@@ -89,13 +98,45 @@ export default function ProfilePage() {
       const userSettings = settingsService.getSettings();
       setSettings(userSettings);
       
+      // Load avatar and check for new unlocks
+      setUserAvatar(AvatarSystem.getUserAvatar());
+      const avatarStatsData = {
+        currentStreak,
+        longestStreak,
+        totalEntries: entries.length,
+        totalWords,
+        moodCounts,
+        hasPhotoAttachments: entries.some(entry => entry.photos && entry.photos.length > 0),
+        averageEntryLength: entries.length > 0 ? Math.round(totalWords / entries.length) : 0,
+        moodVariety: Object.keys(moodCounts).filter(mood => moodCounts[mood as MoodTag] > 0).length,
+        weekendEntries: entries.filter(entry => {
+          const date = new Date(entry.createdAt);
+          return date.getDay() === 0 || date.getDay() === 6;
+        }).length,
+        nightEntries: entries.filter(entry => {
+          const date = new Date(entry.createdAt);
+          return date.getHours() >= 22 || date.getHours() <= 5;
+        }).length
+      };
+      setAvatarStats(avatarStatsData);
+      const unlocks = AvatarSystem.checkUnlocks(avatarStatsData);
+      if (unlocks.length > 0) {
+        setNewUnlocks(unlocks);
+      }
+      
+
+      
     } catch (error) {
       console.error('Error loading profile data:', error);
     } finally {
       console.log('Profile data loaded, setting loading to false');
       setLoading(false);
     }
-  };
+  }, [user?.id]);
+
+  useEffect(() => {
+    loadProfileData();
+  }, [user?.id, loadProfileData]);
 
   const getMoodIcon = (mood: MoodTag) => {
     switch (mood) {
@@ -152,9 +193,32 @@ export default function ProfilePage() {
             className="bg-peaceful-warm backdrop-blur-md border border-peaceful rounded-3xl p-6 shadow-glass"
           >
             <div className="flex items-center gap-4 mb-4">
-              <div className="w-16 h-16 bg-peaceful-accent rounded-full flex items-center justify-center">
-                <UserIcon className="w-8 h-8 text-peaceful-bg" />
-              </div>
+              <motion.div 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowAvatarCustomization(true)}
+                className="relative cursor-pointer group"
+              >
+                <Avatar avatar={userAvatar} size="lg" />
+                <div className="absolute inset-0 bg-black/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span className="text-white text-xs font-medium">Customize</span>
+                </div>
+                <div className="absolute -bottom-2 -right-2">
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={(e) => { e.stopPropagation(); setShowExport(true); }}
+                    className="w-6 h-6 bg-peaceful-accent rounded-full flex items-center justify-center text-xs"
+                  >
+                    📤
+                  </motion.button>
+                </div>
+                {newUnlocks.length > 0 && (
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-xs">{newUnlocks.length}</span>
+                  </div>
+                )}
+              </motion.div>
               <div>
                 <h2 className="text-2xl font-serif font-bold text-peaceful-text">
                   {user?.email?.split('@')[0] || 'Guest User'}
@@ -255,7 +319,16 @@ export default function ProfilePage() {
             </div>
           </div>
 
-
+          {/* Avatar Progress */}
+          {avatarStats && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.65 }}
+            >
+              <AvatarProgress stats={avatarStats} />
+            </motion.div>
+          )}
 
           {/* Current Settings */}
           <motion.div 
@@ -331,6 +404,32 @@ export default function ProfilePage() {
                 ))}
               </div>
             </motion.div>
+          )}
+          
+          {/* Avatar Customization Modal */}
+          {showAvatarCustomization && (
+            <AvatarCustomization 
+              onClose={() => {
+                setShowAvatarCustomization(false);
+                setUserAvatar(AvatarSystem.getUserAvatar());
+                setNewUnlocks([]);
+              }} 
+            />
+          )}
+          
+          {/* Achievement Notifications */}
+          <AchievementNotification 
+            unlocks={newUnlocks}
+            onClose={() => setNewUnlocks([])} 
+          />
+          
+          {/* Export Modal */}
+          {showExport && (
+            <AvatarExport
+              avatar={userAvatar}
+              username={user?.email?.split('@')[0] || 'Guest'}
+              onClose={() => setShowExport(false)}
+            />
           )}
         </div>
       </div>

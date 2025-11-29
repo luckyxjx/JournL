@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  allowedDevOrigins: ['192.168.0.106'],
+  allowedDevOrigins: process.env.ALLOWED_DEV_ORIGINS?.split(',') || [],
   
   // Performance optimizations
   compress: true,

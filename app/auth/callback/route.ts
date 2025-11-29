@@ -10,7 +10,9 @@ export async function GET(request: NextRequest) {
 
   if (error) {
     console.error('Auth callback error:', error, errorDescription)
-    return NextResponse.redirect(new URL(`/login?error=${encodeURIComponent(errorDescription || error)}`, request.url))
+    // Sanitize error message to prevent XSS
+    const safeError = error === 'access_denied' ? 'access_denied' : 'auth_error'
+    return NextResponse.redirect(new URL(`/login?error=${safeError}`, request.url))
   }
 
   if (code) {
@@ -34,16 +36,26 @@ export async function GET(request: NextRequest) {
     )
     
     try {
-      const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
+      const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
       if (exchangeError) {
         console.error('Code exchange error:', exchangeError)
         return NextResponse.redirect(new URL(`/login?error=${encodeURIComponent(exchangeError.message)}`, request.url))
       }
+      
+      // Verify session was created successfully
+      if (!data.session) {
+        console.error('No session created after code exchange')
+        return NextResponse.redirect(new URL('/login?error=session_failed', request.url))
+      }
+      
+      console.log('Auth successful, user:', data.user?.email)
+      
     } catch (err) {
       console.error('Auth callback error:', err)
       return NextResponse.redirect(new URL('/login?error=auth_failed', request.url))
     }
   }
 
-  return NextResponse.redirect(new URL('/', request.url))
+  // Redirect to profile page after successful authentication
+  return NextResponse.redirect(new URL('/profile', request.url))
 }

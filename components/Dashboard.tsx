@@ -28,6 +28,20 @@ export default function Dashboard() {
   const [isOffline, setIsOffline] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const calculateStreak = async (): Promise<number> => {
+    if (!user?.id) {
+      console.warn('No user ID available for streak calculation');
+      return 0;
+    }
+    try {
+      const streakService = new StreakService();
+      return await streakService.calculateCurrentStreak(user.id);
+    } catch (error) {
+      console.error('Failed to calculate streak:', error);
+      return 0;
+    }
+  };
+
   useEffect(() => {
     // Only run on client side
     if (typeof window === 'undefined') return;
@@ -90,21 +104,7 @@ export default function Dashboard() {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
-  }, [user?.id]);
-
-  const calculateStreak = async (): Promise<number> => {
-    if (!user?.id) {
-      console.warn('No user ID available for streak calculation');
-      return 0;
-    }
-    try {
-      const streakService = new StreakService();
-      return await streakService.calculateCurrentStreak(user.id);
-    } catch (error) {
-      console.error('Failed to calculate streak:', error);
-      return 0;
-    }
-  };
+  }, [user?.id, calculateStreak]);
 
   const stripHtml = (html: string): string => {
     if (typeof window === 'undefined' || !html) return html || '';
