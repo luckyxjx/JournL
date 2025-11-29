@@ -102,30 +102,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const signInWithGoogle = async () => {
+    const redirectUrl = `${window.location.protocol}//${window.location.host}/auth/callback`
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`
+        redirectTo: redirectUrl
       }
     })
     if (error) throw error
   }
 
   const signInWithApple = async () => {
+    const redirectUrl = `${window.location.protocol}//${window.location.host}/auth/callback`
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'apple',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`
+        redirectTo: redirectUrl
       }
     })
     if (error) throw error
   }
 
   const signInWithMagicLink = async (email: string) => {
+    const redirectUrl = `${window.location.protocol}//${window.location.host}/auth/callback`
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`
+        emailRedirectTo: redirectUrl
       }
     })
     if (error) throw error
