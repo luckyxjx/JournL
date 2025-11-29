@@ -3,6 +3,25 @@ const nextConfig = {
   reactStrictMode: true,
   allowedDevOrigins: process.env.ALLOWED_DEV_ORIGINS?.split(',') || [],
   
+  // Allow access from other devices on network
+  async rewrites() {
+    return []
+  },
+  
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*'
+          }
+        ]
+      }
+    ]
+  },
+  
   // Performance optimizations
   compress: true,
   poweredByHeader: false,

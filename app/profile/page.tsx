@@ -178,7 +178,7 @@ export default function ProfilePage() {
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => router.back()} 
+              onClick={() => router.push('/')} 
               className="text-peaceful-text hover:text-peaceful-accent transition-colors p-2 rounded-lg hover:bg-white/20"
             >
               ← Back

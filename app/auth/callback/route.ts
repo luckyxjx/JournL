@@ -56,6 +56,6 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Redirect to profile page after successful authentication
-  return NextResponse.redirect(new URL('/profile', request.url))
+  // Redirect to dashboard after successful authentication
+  return NextResponse.redirect(new URL('/', request.url))
 }

@@ -2,8 +2,21 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useAuth } from '@/lib/auth';
+import { useRouter } from 'next/navigation';
 
 export default function SettingsPage() {
+  const { signOut, user, isGuest } = useAuth();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      router.push('/login');
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
+  };
   const settingsOptions = [
     {
       title: 'Theme',
@@ -69,6 +82,31 @@ export default function SettingsPage() {
               </Link>
             </motion.div>
           ))}
+          
+          {(user || isGuest) && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: settingsOptions.length * 0.1 }}
+            >
+              <button
+                onClick={handleSignOut}
+                className="w-full bg-red-50 border border-red-200 rounded-2xl p-6 hover:bg-red-100 transition-all duration-300 group"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center group-hover:bg-red-200 transition-colors">
+                    <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 text-left">
+                    <h3 className="font-semibold text-lg text-red-800">Sign Out</h3>
+                    <p className="text-red-600">{isGuest ? 'Exit guest mode' : 'Sign out of your account'}</p>
+                  </div>
+                </div>
+              </button>
+            </motion.div>
+          )}
         </div>
       </div>
     </div>
