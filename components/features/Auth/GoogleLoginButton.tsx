@@ -1,12 +1,15 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { signInWithGoogle } from '@/lib/services/supabase/client';
+import { useAuth } from '@/lib/auth';
 
 export default function GoogleLoginButton() {
+  const { signInWithGoogle } = useAuth();
+  
   const handleGoogleLogin = async () => {
-    const { error } = await signInWithGoogle();
-    if (error) {
+    try {
+      await signInWithGoogle();
+    } catch (error) {
       console.error('Google login error:', error);
     }
   };
