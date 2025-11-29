@@ -154,7 +154,7 @@ export default function NotificationsPage() {
           >
             <h3 className="font-semibold text-lg text-blue-800 mb-2">Browser Notifications</h3>
             <p className="text-sm text-blue-600 mb-4">
-              To receive notifications, you'll need to allow them in your browser settings when prompted.
+              To receive notifications, you&apos;ll need to allow them in your browser settings when prompted.
             </p>
             <div className="flex items-center justify-between">
               <span className="text-sm text-blue-700">
