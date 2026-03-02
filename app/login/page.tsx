@@ -115,6 +115,22 @@ export default function LoginPage() {
             Your private space for reflection and growth
           </p>
         </div>
+
+        {/* Temporary Service Notice */}
+        <div className="mb-4 p-4 bg-amber-100/80 border border-amber-300/60 text-amber-900 rounded-xl text-sm">
+          <div className="flex items-start gap-2">
+            <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.72-1.36 3.485 0l5.58 9.92c.75 1.334-.213 2.981-1.742 2.981H4.42c-1.53 0-2.492-1.647-1.743-2.98l5.58-9.92zM11 13a1 1 0 10-2 0 1 1 0 002 0zm-1-7a1 1 0 00-1 1v3a1 1 0 102 0V7a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            <div>
+              <p className="font-semibold">App database is temporarily down.</p>
+              <p className="mt-1">
+                Please use Guest Mode with local storage for now. Cloud sync will be available again soon.
+                We&apos;re sorry for the inconvenience.
+              </p>
+            </div>
+          </div>
+        </div>
         
         {/* Error Message */}
         {error && (
@@ -243,7 +259,7 @@ export default function LoginPage() {
             ) : (
               <>
                 <UserIcon />
-                <span>Continue as Guest</span>
+                <span>Continue as Guest (Recommended)</span>
               </>
             )}
           </button>
